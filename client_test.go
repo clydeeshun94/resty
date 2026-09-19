@@ -547,6 +547,18 @@ func TestClientSetCookieJar(t *testing.T) {
 	assertTrue(t, client.httpClient.Jar == backupJar, "CookieJar should be set back to original jar")
 }
 
+func TestCreateCookieJar(t *testing.T) {
+	jar := createCookieJar()
+	assertNotNil(t, jar)
+
+	testURL, _ := url.Parse("https://example.com")
+	jar.SetCookies(testURL, []*http.Cookie{{Name: "test", Value: "value"}})
+	cookies := jar.Cookies(testURL)
+	assertEqual(t, 1, len(cookies))
+	assertEqual(t, "test", cookies[0].Name)
+	assertEqual(t, "value", cookies[0].Value)
+}
+
 // This test methods exist for test coverage purpose
 // to validate the getter and setter
 func TestClientSettingsCoverage(t *testing.T) {
